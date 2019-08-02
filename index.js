@@ -4,14 +4,11 @@ const express = require('express')
 const WebSocket = require('ws')
 const ccxt = require('ccxt')
 const bitmex = new ccxt.bitmex()
-const binance = new ccxt.binance()
 
 let symbols = [
     'XBTUSD', 'ETHUSD',
     // 'XBTM19','XBTU19','ETHM19','ADAM19','BCHM19',
     // 'EOSM19','LTCM19','TRXM19','EOSM19','XRPM19'
-
-    // 'BNBBTC','NEOBTC'
 ]
 
 // x750 bars/pull
@@ -99,7 +96,7 @@ app.listen(port, () => console.log(`[bopple-bars] - server started on port ${por
         if (this.socket) {
             console.error('bitmex ws close')
         }
-        this.socket = new WebSocket('wss://www.bitmex.com/realtime?subscribe=trade,liquidation')
+        this.socket = new WebSocket('wss://www.bitmex.com/realtime?subscribe=trade')
         this.socket.addEventListener('open', socketOpenListener)
         this.socket.addEventListener('message', socketMessageListener)
         this.socket.addEventListener('close', socketCloseListener)
@@ -160,13 +157,6 @@ const getCCXTsymbol = (symbol) => {
         return symbol.replace('M19', 'M19')
     } else if (symbol.includes('U19')) {
         return symbol.replace('U19', 'U19')
-    }
-
-    //binance pairs
-    if (symbol.includes('BTC')) {
-        return symbol.replace('BTC', '/BTC')
-    } else if (symbol.includes('USDT')) {
-        return symbol.replace('USDT', '/USDT')
     }
     return symbol
 }
