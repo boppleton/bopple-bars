@@ -16,37 +16,6 @@ let mexLength = 4
 
 let data = [[bars = {}, ['m1', 'm5', 'h1', 'd1']],]
 
-const startData = (dataItem, symbols, paths) => {
-    symbols.forEach((s) => {
-        dataItem[s] = {}
-        paths.forEach((p) => {
-            dataItem[s][p] = ['[' + s + ':' + p + ':START]']
-        })
-    })
-}
-
-data.forEach((d) => {
-    startData(d[0], d[2] || symbols, d[1])
-})
-
-const app = express()
-const port = process.env.PORT || 3001
-
-// set paths, ex. GET /XBTUSD/m1
-const setPaths = (data, paths) => {
-    Object.keys(data).forEach((key) => {
-        paths.forEach((p) => {
-            app.get('/' + key + '/' + p, (req, res) => res.send(data[key][p] || data[key]))
-        })
-    })
-}
-
-data.forEach((d) => {
-    setPaths(d[0], d[1])
-})
-
-app.listen(port, () => console.log(`[bopple-bars] - server started on port ${port}`));
-
 // get ohlc history //
 (async () => {
     async function getBars(symbol, bin) {
@@ -68,14 +37,14 @@ app.listen(port, () => console.log(`[bopple-bars] - server started on port ${por
     await symbols.forEach(async (s) => {
         setTimeout(async () => {
             await getBars(s, 'h1')
-            await sleep(50000 * Math.random())
+            await sleep(20000 * Math.random())
             await getBars(s, 'm1')
-            await sleep(50000 * Math.random())
+            await sleep(20000 * Math.random())
             await getBars(s, 'm5')
-            await sleep(50000 * Math.random())
+            await sleep(20000 * Math.random())
             await getBars(s, 'd1')
-            await sleep(50000 * Math.random())
-        }, 50000 * Math.random())
+            await sleep(20000 * Math.random())
+        }, 20000 * Math.random())
     })
 
 })();
@@ -146,6 +115,39 @@ app.listen(port, () => console.log(`[bopple-bars] - server started on port ${por
     }
 
 })()
+
+const startData = (dataItem, symbols, paths) => {
+    symbols.forEach((s) => {
+        dataItem[s] = {}
+        paths.forEach((p) => {
+            dataItem[s][p] = ['[' + s + ':' + p + ':START]']
+        })
+    })
+}
+
+data.forEach((d) => {
+    startData(d[0], d[2] || symbols, d[1])
+})
+
+const app = express()
+const port = process.env.PORT || 3001
+
+// set paths, ex. GET /XBTUSD/m1
+const setPaths = (data, paths) => {
+    Object.keys(data).forEach((key) => {
+        paths.forEach((p) => {
+            app.get('/' + key + '/' + p, (req, res) => res.send(data[key][p] || data[key]))
+        })
+    })
+}
+
+data.forEach((d) => {
+    setPaths(d[0], d[1])
+})
+
+app.listen(port, () => console.log(`[bopple-bars] - server started on port ${port}`));
+
+
 
 const getCCXTsymbol = (symbol) => {
     //mex pairs
