@@ -5,17 +5,20 @@ const bitmex = new ccxt.bitmex()
 
 /// @boppleton industries
 
+// paths would be /XBTUSD/m1 or /ETHUSD/testpath2
 let data = [
     [bars = {}, ['m1', 'm5', 'h1', 'd1']],
     [testdata = {}, ['testpath1', 'testpath2']]
 ]
 
+// uses this name for paths, format for CCXT in bottom function
 let symbols = [
     'XBTUSD', 'ETHUSD',
     // 'XBTM19','XBTU19','ETHM19','ADAM19','BCHM19',
     // 'EOSM19','LTCM19','TRXM19','EOSM19','XRPM19'
 ]
 
+// how much OHLC history to store for each timeframe
 let barCount = 2000
 
 
@@ -26,6 +29,7 @@ const setupDataAPI = (() => {
         symbols.forEach((s) => {
             dataItem[s] = {}
             paths.forEach((p) => {
+                console.log('make path ' + s + p)
                 dataItem[s][p] = ['[' + s + ':' + p + ':START]']
             })
         })
